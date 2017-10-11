@@ -1,0 +1,7 @@
+---
+- hosts: java
+  remote_user: root
+
+  roles:
+    - env
+    - tomcat_install

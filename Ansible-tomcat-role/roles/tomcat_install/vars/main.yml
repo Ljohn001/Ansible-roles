@@ -1,0 +1,8 @@
+---
+tomcat85:
+  tomcat_tar: apache-tomcat-8.5.4.tar.gz
+  tomcat_folder: apache-tomcat-8.5.4
+  jre7u80:
+    java_home: /usr/local/jre1.7.0_80
+    jre_folder: jre1.7.0_80
+    jre_tar: jre-7u80-linux-x64.tar.gz

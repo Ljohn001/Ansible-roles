@@ -1,0 +1,21 @@
+---
+- name: copy jre
+  copy: src=jre-7u80-linux-x64.tar.gz dest=/usr/local/src
+
+- name: copy tomcat
+  copy: src=apache-tomcat-8.5.4.tar.gz dest=/usr/local/src
+
+- name: copy java env init scripts
+  template: src=java-env-7u80.sh dest=/etc/profile.d/java-env.sh
+  with_items: "{{tomcat85}}"
+
+- name: initial java env vars
+  shell: source /etc/profile.d/java-env.sh
+
+- name: copy tomcat installation scripts
+  template: src=install_tomcat.sh dest=/usr/local/src
+  with_items: "{{tomcat85}}"
+
+#- shell: sh ./install_tomcat.sh
+#  args:
+#    chdir: /usr/local/src/

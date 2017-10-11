@@ -1,0 +1,6 @@
+---
+- name: install libselinux-python, if not, ansible will raise error
+  yum: name=libselinux-python state=present
+
+- name: disable selinux
+  selinux: state=disabled
