@@ -1,0 +1,11 @@
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+LogRemoteCommands=1
+Timeout=15
+Server={{ zabbix_server }}
+StartAgents=8
+ServerActive={{ zabbix_server }}
+Hostname={{ ansible_hostname }}
+ListenIP={{ ansible_default_ipv4.address}}
+UnsafeUserParameters=1
+

@@ -1,0 +1,22 @@
+---
+- name: Create zabbix directory
+  file: path=/opt/zabbix state=directory
+- name: Copy zabbix rpm and scripts
+  copy: src={{item}} dest=/opt/zabbix
+  with_items:
+    - zabbix-agent-3.4.1-1.el6.x86_64.rpm
+    - zabbix-sender-3.4.1-1.el6.x86_64.rpm
+
+- name: Install zabbix agent
+  yum: name=/opt/zabbix/{{item}} state=present
+  with_items:
+    - zabbix-agent-3.4.1-1.el6.x86_64.rpm
+    - zabbix-sender-3.4.1-1.el6.x86_64.rpm
+
+- name: Zabbix config file
+  template: src=zabbix_agentd_conf.ja2 dest=/etc/zabbix/zabbix_agentd.conf
+  notify:
+    - Restart zabbix agent
+  
+- name: Start Zabbix agent
+  service: name=zabbix-agent state=started enabled=yes

@@ -1,0 +1,19 @@
+---
+  
+- name: Copy the EPEL repository definition
+  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+
+- name: Create the GPG key for EPEL
+  copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
+
+
+- name: Install common package
+  yum: name={{item}} state=present
+  with_items:
+  - python-devel 
+  - python-lxml
+  - MySQL-python
+  - rsync
+- name: Config Hostname
+  hostname: name={{ansible_hostname}}
+
