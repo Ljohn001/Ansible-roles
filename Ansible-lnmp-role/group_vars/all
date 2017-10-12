@@ -1,0 +1,73 @@
+---
+################
+## MYSQL CONF ##
+################
+
+# mysql version choice
+mysql5172:
+  version: 5.1.72
+  configure_args: >
+    --prefix=$BASEDIR --datadir=$DATADIR
+    --with-mysqld-user=mysql --with-charset=utf8
+    --with-extra-charsets=all
+
+mysql5173:
+  version: 5.1.73
+  configure_args: >
+    --prefix=$BASEDIR --datadir=$DATADIR
+    --with-mysqld-user=mysql --with-charset=utf8
+    --with-extra-charsets=all
+
+mysql5549:
+  version: 5.5.49
+  configure_args: >
+    -DCMAKE_INSTALL_PREFIX=$BASEDIR -DMYSQL_DATADIR=$DATADIR -DMYSQL_USER=$DAEMON_USER -DMYSQL_TCP_PORT=3306 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_MEMORY_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DENABLED_LOCAL_INFILE=1 -DWITH_EXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci
+
+mysql5630:
+  version: 5.6.30
+  configure_args: >
+    -DCMAKE_INSTALL_PREFIX=$BASEDIR -DMYSQL_DATADIR=$DATADIR -DMYSQL_USER=$DAEMON_USER -DMYSQL_TCP_PORT=3306 -DWITH_MYISAM_STORAGE_ENGINE=1 -DWITH_INNOBASE_STORAGE_ENGINE=1 -DWITH_MEMORY_STORAGE_ENGINE=1 -DWITH_READLINE=1 -DENABLED_LOCAL_INFILE=1 -DWITH_EXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci
+
+# mysql basic conf
+mysql_base_dir: /usr/local/mysql
+mysql_data_dir: /data/mysql
+mysql_init_pass: adminmysql
+mysql_socket: /tmp/mysql.sock
+mysql_daemon_name: mysqld
+mysql_daemon_user: mysql
+
+
+################
+## NGINX CONF ##
+################
+
+nginx180:
+  version: 1.8.0
+  configure_args: >
+    --user=$DAEMON_USER --group=$DAEMON_USER --prefix=$BASEDIR --with-http_stub_status_module --with-http_ssl_module --with-pcre --with-http_realip_module
+
+nginx_base_dir: /usr/local/nginx
+nginx_web_dir: /data/web/www
+nginx_log_dir: /data/web/log
+nginx_daemon_name: nginxd
+nginx_daemon_user: nginx
+
+
+##############
+## PHP CONF ##
+##############
+
+php533:
+  version: 5.3.3
+  configure_args: >
+    --prefix=$PHPDIR --with-config-file-path=$CONFDIR --enable-fpm --with-fpm-user=${DAEMON_USER} --with-fpm-group=${DAEMON_USER} --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-mysql=mysqlnd --with-libxml-dir  --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir --with-iconv-dir --with-zlib-dir --with-mcrypt --enable-soap --enable-gd-native-ttf --enable-ftp --enable-mbstring --enable-exif --disable-ipv6 --with-curl --with-openssl
+
+php5621:
+  version: 5.6.21
+  configure_args: >
+    --prefix=$PHPDIR --with-config-file-path=$CONFDIR --enable-fpm --with-fpm-user=${DAEMON_USER} --with-fpm-group=${DAEMON_USER} --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-mysql=mysqlnd --with-libxml-dir  --with-gd --with-jpeg-dir --with-png-dir --with-freetype-dir --with-iconv-dir --with-zlib-dir --with-mcrypt --enable-soap --enable-gd-native-ttf --enable-ftp --enable-mbstring --enable-exif --disable-ipv6 --with-curl --with-openssl
+
+php_base_dir: /usr/local/php
+php_conf_dir: /usr/local/php/etc
+php_daemon_name: php-fpm
+php_daemon_user: php-fpm

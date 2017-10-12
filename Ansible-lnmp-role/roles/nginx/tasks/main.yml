@@ -1,0 +1,26 @@
+---
+- name: copy nginx tar
+  copy: src=nginx-{{ nginx.version }}.tar.gz dest=/usr/local/src
+
+- name: copy nginx install scripts
+  template: src=nginxinstall.sh dest=/usr/local/src
+
+- name: copy nignxd
+  template: src=nginxd dest=/etc/init.d/{{ nginx_daemon_name }} mode=0755
+
+- name: group add
+  group: name={{ nginx_daemon_user }} state=present
+
+- name: user add
+  user: name={{ nginx_daemon_user }} group={{ nginx_daemon_user }}
+
+- name: yum install basic packages
+  yum: name={{ item }} state=present
+  with_items:
+    - pcre-devel
+    - openssl
+    - openssl-devel
+
+- shell: sh nginxinstall.sh
+  args:
+    chdir: /usr/local/src

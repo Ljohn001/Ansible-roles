@@ -1,0 +1,21 @@
+---
+- name: install libselinux-python, if not, ansible will raise error
+  yum: name=libselinux-python state=present
+
+- name: disable selinux
+  selinux: state=disabled
+
+- name: yum install env packages
+  yum: name={{ item }} state=present
+  with_items:
+    - gcc
+    - gcc-c++
+    - cmake
+    - ncurses-devel
+    - epel-release
+
+- name: yum group install base and development tools
+  yum: name={{ item }} state=present
+  with_items:
+    - "@base"
+    - "@Development tools"

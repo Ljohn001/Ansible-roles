@@ -1,0 +1,70 @@
+#!/bin/bash 
+# chkconfig: - 30 21
+# description: http service.
+
+# Source Function Library
+. /etc/init.d/functions
+
+# Nginx Settings
+NGINX_SBIN="{{ nginx_base_dir }}/sbin/nginx"
+NGINX_CONF="{{ nginx_base_dir }}/conf/nginx.conf"
+NGINX_PID="{{ nginx_base_dir }}/logs/nginx.pid"
+RETVAL=0
+prog="Nginx"
+
+start() {
+         echo -n $"Starting $prog: "
+         mkdir -p /dev/shm/nginx_temp
+         daemon $NGINX_SBIN -c $NGINX_CONF
+         RETVAL=$?
+         echo
+         return $RETVAL
+}
+
+stop() {
+         echo -n $"Stopping $prog: "
+         killproc -p $NGINX_PID $NGINX_SBIN -TERM
+         rm -rf /dev/shm/nginx_temp
+         RETVAL=$?
+         echo
+         return $RETVAL
+}
+
+reload(){
+         echo -n $"Reloading $prog: "
+         killproc -p $NGINX_PID $NGINX_SBIN -HUP
+         RETVAL=$?
+         echo
+         return $RETVAL
+}
+
+restart(){
+         stop
+         start
+}
+
+configtest(){
+     $NGINX_SBIN -c $NGINX_CONF -t
+     return 0
+}
+case "$1" in
+   start)
+         start
+         ;;
+   stop)
+         stop
+         ;;
+   reload)
+         reload
+         ;;
+   restart)
+         restart
+         ;;
+   configtest)
+         configtest
+         ;;
+   *)
+         echo $"Usage: $0 {start|stop|reload|restart|configtest}"
+         RETVAL=1
+esac
+exit $RETVAL

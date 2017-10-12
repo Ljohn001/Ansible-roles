@@ -1,0 +1,30 @@
+---
+- name: copy php tarball
+  copy: src=php-{{ php.version }}.tar.gz dest=/usr/local/src
+
+- name: copy php install script template
+  template: src=phpinstall.sh dest=/usr/local/src
+
+- name: yum install env packages
+  yum: name={{ item }} state=present
+  with_items:
+    - libxml2-devel
+    - libcurl-devel
+    - libjpeg-turbo-devel
+    - libpng-devel
+    - freetype-devel
+    - php-mcrypt
+    - libmcrypt-devel
+    - libevent-devel
+    - openssl-devel
+
+- name: group add
+  group: name={{ php_daemon_user }} state=present
+
+- name: user add
+  user: name={{ php_daemon_user }} group={{ php_daemon_user }} state=present system=yes
+
+
+- shell: sh phpinstall.sh
+  args:
+    chdir: /usr/local/src

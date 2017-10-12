@@ -1,0 +1,53 @@
+#!/bin/bash
+
+## env setting ##
+BASEDIR={{ mysql_base_dir }}
+DATADIR={{ mysql_data_dir }}
+PASSWORD={{ mysql_init_pass }}
+VERSION={{ mysql.version }}
+DAEMON_USER={{ mysql_daemon_user }}
+DAEMON_NAME={{ mysql_daemon_name }}
+MYSQL_SOCK={{ mysql_socket }}
+
+PIDFILE=${BASEDIR}/mysql.pid
+
+
+## source package unzip ##
+[[ -d mysql ]] && rm -rf mysql
+mkdir mysql
+tar zxvf mysql-${VERSION}.tar.gz -C mysql
+mv mysql/mysql-${VERSION}/* mysql/
+cd mysql
+
+## mysql install ##
+[[ $VERSION == "5.1.72" ]] || [ $VERSION == "5.1.73" ] && ./configure {{ mysql.configure_args }}
+[[ $VERSION == "5.5.49" ]] || [[ $VERSION == "5.6.30" ]] && cmake {{ mysql.configure_args }}
+make
+make install
+
+mkdir -p $DATADIR
+chown -R ${DAEMON_USER}:${DAEMON_USER} $BASEDIR
+chown -R ${DAEMON_USER}:${DAEMON_USER} $DATADIR
+
+## mysql initial ##
+[[ $VERSION == "5.5.49" ]] || [[ $VERSION == "5.6.30" ]] && cd $BASEDIR
+./scripts/mysql_install_db --datadir=$DATADIR --user=mysql
+cp ./support-files/mysql.server /etc/init.d/$DAEMON_NAME
+[[ -e /etc/my.cnf ]] && rm -f /etc/my.cnf
+[[ $VERSION == "5.6.30" ]] && cp ./support-files/my-default.cnf /etc/my.cnf || cp ./support-files/my-large.cnf /etc/my.cnf
+chmod 755 /etc/init.d/mysqld
+
+sed -i "s#^basedir=#basedir=$BASEDIR#g" /etc/init.d/$DAEMON_NAME
+sed -i "s#^datadir=#datadir=$DATADIR#g" /etc/init.d/$DAEMON_NAME
+sed -i "s#^pid_file=#pid_file=$PIDFILE#g" /etc/init.d/$DAEMON_NAME
+
+sed -i "/\[mysqld\]/abasedir=$BASEDIR" /etc/my.cnf
+sed -i "/\[mysqld\]/adatadir=$DATADIR" /etc/my.cnf
+sed -i "/\[mysqld\]/apid_file=$PIDFILE" /etc/my.cnf
+sed -i "s#^socket.*mysql.sock#socket=$MYSQL_SOCK#g" /etc/my.cnf
+
+
+## service start and enanble ##
+chkconfig $DAEMON_NAME on
+/etc/init.d/$DAEMON_NAME start
+$BASEDIR/bin/mysqladmin -u root password "$PASSWORD"

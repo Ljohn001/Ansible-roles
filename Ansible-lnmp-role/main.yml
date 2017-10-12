@@ -1,0 +1,7 @@
+---
+- hosts: all
+  remote_user: root
+
+  roles:
+    - {role: env}
+    - {role: php, php: "{{ php533 }}"}

@@ -1,0 +1,16 @@
+---
+- name: copy mysql source code
+  copy: src=mysql-{{ mysql.version }}.tar.gz dest=/usr/local/src
+
+- name: copy msyql install shell
+  template: src=mysqlinstall.sh.j2 dest=/usr/local/src/mysqlinstall.sh
+
+- name: daemon group create
+  group: name={{ mysql_daemon_user }} state=present
+
+- name: daemon user create
+  user: name={{ mysql_daemon_user }} group={{ mysql_daemon_user }} system=yes
+
+- shell: sh mysqlinstall.sh
+  args:
+    chdir: /usr/local/src
