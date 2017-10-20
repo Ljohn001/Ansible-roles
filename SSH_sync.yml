@@ -1,0 +1,9 @@
+- hosts: vhosts
+  remote_user: root
+
+  tasks:
+  - name: mkdir /root/.ssh
+    command: mkdir -p /root/.ssh
+
+  - name: copy ssh key
+    copy: src=/root/.ssh/id_rsa.pub dest=/root/.ssh owner=root group=root mode=0644
