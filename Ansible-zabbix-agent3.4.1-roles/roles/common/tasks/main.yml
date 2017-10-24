@@ -1,10 +1,20 @@
 ---
   
-- name: Copy the EPEL repository definition
-  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+- name: Copy the EPEL repository definition for centos6.x
+  copy: src=epel-6.repo dest=/etc/yum.repos.d/epel-6.repo
+  when: ansible_distribution_major_version == "6"
+
+- name: Copy the EPEL repository definition for centos7.x
+  copy: src=epel-7.repo dest=/etc/yum.repos.d/epel-7.repo
+  when: ansible_distribution_major_version == "7"
 
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
+  when: ansible_distribution_major_version == "6"
+
+- name: Create the GPG key for EPEL
+  copy: src=RPM-GPG-KEY-EPEL-7 dest=/etc/pki/rpm-gpg
+  when: ansible_distribution_major_version == "7"
 
 
 - name: Install common package

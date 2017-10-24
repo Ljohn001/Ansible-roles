@@ -1,17 +1,34 @@
 ---
 - name: Create zabbix directory
   file: path=/opt/zabbix state=directory
-- name: Copy zabbix rpm and scripts
+
+- name: Copy zabbix rpm and scripts for centos6.x
   copy: src={{item}} dest=/opt/zabbix
   with_items:
     - zabbix-agent-3.4.1-1.el6.x86_64.rpm
     - zabbix-sender-3.4.1-1.el6.x86_64.rpm
+  when: ansible_distribution_major_version == "6"
 
-- name: Install zabbix agent
+- name: Copy zabbix rpm and scripts for centos7.x
+  copy: src={{item}} dest=/opt/zabbix
+  with_items:
+    - zabbix-agent-3.4.1-1.el7.x86_64.rpm
+    - zabbix-sender-3.4.1-1.el7.x86_64.rpm
+  when: ansible_distribution_major_version == "7"
+
+- name: Install zabbix agent for centos6.x
   yum: name=/opt/zabbix/{{item}} state=present
   with_items:
     - zabbix-agent-3.4.1-1.el6.x86_64.rpm
     - zabbix-sender-3.4.1-1.el6.x86_64.rpm
+  when: ansible_distribution_major_version == "6"
+
+- name: Install zabbix agent for centos7.x
+  yum: name=/opt/zabbix/{{item}} state=present
+  with_items:
+    - zabbix-agent-3.4.1-1.el7.x86_64.rpm
+    - zabbix-sender-3.4.1-1.el7.x86_64.rpm
+  when: ansible_distribution_major_version == "7"
 
 - name: Zabbix config file
   template: src=zabbix_agentd_conf.ja2 dest=/etc/zabbix/zabbix_agentd.conf
