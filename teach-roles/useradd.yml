@@ -1,0 +1,9 @@
+- hosts: websvrs
+  remote_user: root
+  tasks:
+  - name: add some users
+    user: name={{ item }} state=present
+    with_items:
+    - user1
+    - user2
+    - user3

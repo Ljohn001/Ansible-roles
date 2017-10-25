@@ -1,0 +1,22 @@
+- hosts: websrvs
+  remote_user: root
+  tasks:
+    - name: install nginx package
+      yum: name=nginx state=latest
+    - name: copy conf file nginx.conf for CentOS 7
+      copy: src=/tmp/nginx.conf dest=/etc/nginx/nginx.conf
+      when: ansible_distribution_major_version == "7"
+      tags: conf
+      notify:
+        - restart nginx service
+    - name: copy conf file nginx.conf for CentOS 6
+      copy: src=/tmp/nginx.6.conf dest=/etc/nginx/nginx.conf
+      when: ansible_distribution_major_version == "6"
+      tags: conf
+      notify:
+        - restart nginx service
+    - name: start nginx service
+      service: name=nginx state=started enabled=yes
+    handlers:
+    - name: restart nginx service
+      service: name=nginx state=restarted
