@@ -1,0 +1,13 @@
+[webs]
+192.168.1.130  ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+[vhosts]
+192.168.0.40 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.41 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.42 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.44 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.45 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.50 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.56 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.57 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.58 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22
+192.168.0.59 ansible_ssh_user=root ansible_ssh_pass=1356236 ansible_ssh_port=22

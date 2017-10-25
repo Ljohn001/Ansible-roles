@@ -1,5 +1,5 @@
 ---
-- hosts: webs
+- hosts: vhosts
   remote_user: root
   tasks:
     - name: push  authorized_keys
