@@ -1,0 +1,14 @@
+- hosts: websvrs
+  remote_user: root
+  tasks:
+  - name: install httpd package
+        yum: name=httpd state=latest
+  - name: install condiguration file for httpd
+        copy: src=/server/scripts/httpd.conf dest=/etc/httpd/conf/httpd.conf
+        notify:
+        - restart httpd
+  - name: start httpd service
+        service: enabled=true name=httpd state=started
+  handlers:
+  - name: restart httpd
+        service: name=httpd state=restarted

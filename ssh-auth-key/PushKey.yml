@@ -1,0 +1,10 @@
+---
+- hosts: webs
+  remote_user: root
+  tasks:
+    - name: push  authorized_keys
+      authorized_key: 
+        user: root
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"
+        state: present
+        exclusive: yes
