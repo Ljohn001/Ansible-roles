@@ -1,0 +1,18 @@
+---
+- name: Copy ftp client to centos6.x
+  copy: src=ftp-0.17-54.el6.x86_64.rpm dest=/server/apps
+  when: ansible_distribution_major_version == "6"
+- name: Copy ftp client to centos7.x
+  copy: src=ftp-0.17-67.el7.x86_64.rpm dest=/server/apps
+  when: ansible_distribution_major_version == "7"
+- name: Install ftp-client for centos6.x
+  yum: name=/server/apps/{{item}} state=present
+  with_items:
+    - ftp-0.17-54.el6.x86_64.rpm
+  when: ansible_distribution_major_version == "6"
+- name: Install ftp-client for centos7.x
+  yum: name=/server/apps/{{item}} state=present
+  with_items:
+    - ftp-0.17-67.el7.x86_64.rpm
+  when: ansible_distribution_major_version == "7"
+

@@ -1,0 +1,12 @@
+---
+- hosts: 192.168.1.240
+  remote_user: root
+  tasks:
+  - name: ftp is installed 
+       command: /bin/rpm -q ftp
+       when: result|failed
+  - name: ftp is not installed
+       copy: src=/server/apps/ftp-0.17-54.el6.x86_64.rpm dest=/server/apps
+       shell: cd /server/apps; rpm -ivh ftp-0.17-54.el6.x86_64.rpm
+  
+
