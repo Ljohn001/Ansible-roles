@@ -1,0 +1,8 @@
+---
+srcpath: "/usr/local/src"
+ngxversion: "1.10.3"
+nginxtar: "nginx-{{ ngxversion }}.tar.gz"
+nginxpath: "/usr/local/nginx"
+nginxuser: "nginx"
+nginxgroup: "nginx"
+

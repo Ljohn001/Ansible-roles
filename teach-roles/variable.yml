@@ -1,0 +1,5 @@
+- hosts: websvrs
+  remote_user: root
+  tasks:
+  - name: install package
+    yum: name={{ package }} state=present

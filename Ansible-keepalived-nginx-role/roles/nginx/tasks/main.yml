@@ -1,0 +1,57 @@
+---
+- name: install denpendency package
+  yum: name={{ item }} state=present
+  with_items:
+    - pcre
+    - openssl
+    - pcre-devel
+    - openssl-devel
+    - zlib-devel
+    - gd
+    - gd-devel
+
+- name: create nginx pid user
+  user: name={{ nginxuser }} system=yes shell=/sbin/nologin createhome=no
+
+- name: download nginx source
+  get_url:
+    url: "http://nginx.org/download/nginx-{{ ngxversion }}.tar.gz"
+    dest: "{{ srcpath }}/nginx-{{ ngxversion }}.tar.gz"
+    checksum: md5:204a20cb4f0b0c9db746c630d89ff4ea
+
+- name: unarchive nginx.tar.gz
+  command: >
+    tar -C {{ srcpath }}  -xvf {{ srcpath }}/{{ nginxtar }}
+
+- name: compile and install nginx
+  shell: > 
+    cd {{ srcpath }}/{{ nginxtar | replace('.tar.gz','')}} && \
+    ./configure --prefix={{ nginxpath }} \
+    --user={{ nginxuser }} --group={{ nginxgroup }} \
+    --with-http_ssl_module \
+    --with-http_realip_module \
+    --with-http_image_filter_module \
+    --with-http_mp4_module \
+    --with-http_flv_module \
+    --with-http_gzip_static_module \
+    --with-stream \
+    --with-stream_ssl_module \
+    --with-pcre \
+    --with-http_stub_status_module && \
+    make -j `lscpu | awk '$1~/^CPU\(s\):/{print $2}'` && \
+    make install
+  args:
+    creates: "{{ nginxpath }}"
+
+- name: copy nginx conf
+  template: src=nginx.conf.j2 dest={{ nginxpath }}/conf/nginx.conf
+
+- name: copy nginx systemd script
+  template: src=nginx.systemd dest=/lib/systemd/system/nginx.service
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+  notify: start nginx service
+
+- name: copy nginx init script
+  template: src=nginx.init dest=/etc/init.d/nginx mode=755
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+  notify: start nginx service

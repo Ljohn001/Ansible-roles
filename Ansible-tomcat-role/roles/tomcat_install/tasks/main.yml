@@ -16,6 +16,6 @@
   template: src=install_tomcat.sh dest=/usr/local/src
   with_items: "{{tomcat85}}"
 
-#- shell: sh ./install_tomcat.sh
-#  args:
-#    chdir: /usr/local/src/
+- shell: sh ./install_tomcat.sh
+  args:
+    chdir: /usr/local/src/

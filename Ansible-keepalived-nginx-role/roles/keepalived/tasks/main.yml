@@ -1,0 +1,17 @@
+---
+- name: install mailx
+  yum: name=mailx state=present  
+
+- name: install  psmisc for use killall
+  yum: name=psmisc state=present
+
+- name: install keepalived
+  yum: name=keepalived state=present
+
+- name: copy config file and chk_script to keepalived
+  template: src={{ item }} dest=/etc/keepalived/{{ item }}
+  with_items:
+    - keepalived.conf
+    - notify.sh
+    - chk_nginx.sh
+  notify: start keepalived service

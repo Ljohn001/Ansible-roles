@@ -1,0 +1,21 @@
+---
+- hosts: test
+  vars:
+    srcpath: "/usr/local/src"
+    nginx_version: "1.10.3"
+    nginxtar: "nginx-1.10.3.tar.gz"
+    nginxpath: "/usr/local/nginx"
+  
+  remote_user: root
+  
+  tasks:
+  - name: download nginx source
+    get_url: 
+      url: http://nginx.org/download/nginx-1.10.3.tar.gz
+      dest: /usr/local/src/nginx-1.10.3
+   
+  - name: open tar
+    command: >
+      tar -C {{ srcpath }} -zxvf {{ srcpath }}/nginx-{{ nginx_version }}.tar.gz
+     
+  creates: "{{ srcpath }}/nginx-{{ nginx_version }}"

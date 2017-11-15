@@ -1,5 +1,5 @@
-- hosts: websvrs
-  remote_user: root
-  tasks:
-  - name: install package
-    yum: name={{ package }} state=present
+---
+srcpath: "/usr/local/src"
+nginx_version: "1.10.3"
+nginxtar: "nginx-1.10.3.tar.gz"
+nginxpath: "/usr/local/nginx"
