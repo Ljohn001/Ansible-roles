@@ -8,10 +8,12 @@
 - name: install keepalived
   yum: name=keepalived state=present
 
-- name: copy config file and chk_script to keepalived
+- name: copy keepalived_config 
+  template: src=keepalived.conf dest=/etc/keepalived/keepalived.conf
+
+- name: copy ch_scripts for keepalived
   template: src={{ item }} dest=/etc/keepalived/{{ item }}
   with_items:
-    - keepalived.conf
     - notify.sh
     - chk_nginx.sh
   notify: start keepalived service

@@ -4,7 +4,7 @@ vip=192.168.0.100
 contact='root@localhost'
 
 notify() {
-        mailsubject="`hostname` to be $1: vip floating"
+        mailsubject="`hostname` to be $1: $vip floating"
         mailbody="`date '+%F %H:%M:%S'`: vrrp transition, `hostname` changed to be $1"
         echo $mailbody | mail -s "$mailsubject" $contact
 }

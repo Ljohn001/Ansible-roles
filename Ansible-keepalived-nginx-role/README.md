@@ -1,4 +1,3 @@
-[TOC]
 ### 一、架构描述与应用架构
 #### 1. 应用场景
     大多数的互联网公司都会利用nginx的7层反向代理功能来实现后端web server的负载均衡和动静分离。这样做的好处是当单台后端server出现性能瓶颈时可以对其进行横向扩展从而提高整个系统的并发，同时也可以通过后端server提供的http或tcp监控接口对其进行健康检查实现自动Failover和Failback。
@@ -10,16 +9,11 @@
 ### 二、环境和配置
 #### 1.环境
 系统使用CentSO6.9 or CentOS7.3
-服务角色	IP地址	软件版本
+服务器	        IP地址	       软件版本
 proxy1 master	192.168.0.56	1.10.3
-proxy2 backup
-192.168.0.57
-1.10.3
-keepalived1	192.168.0.56
-1.3.5
-keepalived2
-192.168.0.57
-1.3.5
+proxy2 backup   192.168.0.57    1.10.3
+keepalived1	192.168.0.56    1.3.5
+keepalived2     192.168.0.57    1.3.5
 #### 2. 配置说明：
 keepalived1:
 ```
@@ -151,7 +145,7 @@ vip=192.168.0.100
 contact='root@localhost'
 
 notify() {
-        mailsubject="`hostname` to be $1: vip floating"
+        mailsubject="`hostname` to be $1: $vip floating"
         mailbody="`date '+%F %H:%M:%S'`: vrrp transition, `hostname` changed to be $1"
         echo $mailbody | mail -s "$mailsubject" $contact
 }
@@ -175,13 +169,13 @@ case "$1" in
         ;;
 esac
 ```
-#/etc/keepalived/chk_nginx.sh
+#cat /etc/keepalived/chk_nginx.sh
 
 #!/bin/bash
 #
 N=`ps -C nginx --no-header|wc -l`
 if [ $N -eq 0 ];then
-        /usr/local/nginx/sbin/nginx
+        /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
         sleep 1
         if [ `ps -C nginx --no-header|wc -l` -eq 0 ];then
                 killall nginx
@@ -192,8 +186,6 @@ fi
 ### 三、ansible deploy
 ###1. ansible目录结构：
 ```
-tree .
-.
 ├── ansible.cfg
 ├── site.yml
 ├── hosts
