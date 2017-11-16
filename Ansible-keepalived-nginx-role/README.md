@@ -371,3 +371,5 @@ mv /usr/local/nginx/sbin/nginx{.bak,};systemctl start nginx
 <h1>The page from web2</h1>
 ```
 
+关于高可用
+本人的博客地址：http://ljohn.blog.51cto.com/11932290/1981369
