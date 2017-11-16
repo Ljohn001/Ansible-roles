@@ -6,3 +6,6 @@
 - hosts: keepalived
   roles:
     - keepalived
+- hosts: web
+  roles:
+    - httpd

@@ -1,0 +1,12 @@
+- hosts: test
+  remote_user: root
+  
+  vars:
+    a: "{{ ansible_processor }}"
+    b: "{{ ansible_distribution_major_version }}"
+    c: "{{ ansible_default_ipv4['address'] }}"
+    d: "{{ ansible_default_ipv4['interface'] }}"
+  tasks:
+  - name: show base info
+    shell: cat /proc/sys/net/ipv4/conf/{{ d }}/arp_announce && \
+      echo "{{ a }}" && echo "{{ b }}" && echo "{{ c }}"
