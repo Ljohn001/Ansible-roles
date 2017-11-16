@@ -25,10 +25,11 @@ keepalived1:
 #cat /etc/keepalived/keepalived.conf
 ! Configuration File for keepalived
 global_defs {
-   notification_email {  
+   notification_email {
         root@localhost    #定义邮箱报警的邮箱地址
    }
-   notification_email_from root@localhost #定义发送报警信息的地址
+   notification_email_from root@localhost #定义发送报警信息的
+地址
    smtp_server 127.0.0.1 #定义发送邮件的邮件服务器地址
    smtp_connect_timeout 30 #定义发送邮件的超时时间
    router_id ha_nginx #全局标识
@@ -44,7 +45,8 @@ vrrp_instance VI_1 {
     state MASTER
     interface ens33
     virtual_router_id 51
-    priority 100  #备用机器的keepalived的权重要小于这个权重，并且当nginx服务挂掉后100-2要小于备用机器的权重。
+    priority 100  #备用机器的keepalived的权重要小于这个权重，
+并且当nginx服务挂掉后100-2要小于备用机器的权重。
     advert_int 1
     authentication {
         auth_type PASS
@@ -55,28 +57,8 @@ vrrp_instance VI_1 {
     }
     track_script {    #定义使用哪个脚本来检查。
         chk_nginx
-    } 
-    notify_master "/etc/keepalived/notify.sh master"
-    notify_backup "/etc/keepalived/notify.sh backup"
-    notify_fault "/etc/keepalived/notify.sh fault"
-}
-vrrp_instance VI_2 {
-    state BACKUP
-    interface ens33
-    virtual_router_id 52
-    priority 99  #备用机器的keepalived的权重要小于这个权重，并且当nginx服务挂掉后100-2要小于备用机器的权重。
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
     }
-    virtual_ipaddress {
-        192.168.0.101/16 dev ens33 label ens33:2
-    }
-    track_script {    #定义使用哪个脚本来检查。
-        chk_nginx
-   }
-    notify_master "/etc/keepalived/notify.sh master"
+    notify_master "/etc/keepalived/notify.sh master"            #通知脚本
     notify_backup "/etc/keepalived/notify.sh backup"
     notify_fault "/etc/keepalived/notify.sh fault"
 }
@@ -94,6 +76,7 @@ global_defs {
    smtp_connect_timeout 30 #定义发送邮件的超时时间
    router_id ha_nginx #全局标识
 }
+
 vrrp_script chk_nginx {    #定义检查nginx服务的脚本
         script "/etc/keepalived/chk_nginx.sh"
         interval 2 #检查的间隔时间
@@ -111,32 +94,12 @@ vrrp_instance VI_1 {
         auth_pass 1111
     }
     virtual_ipaddress {
-        192.168.0.100/16 dev ens33 label ens33:1
+       192.168.0.100/16 dev ens33 label ens33:1
     }
     track_script {    #定义使用哪个脚本来检查。
         chk_nginx
-   } 
-    notify_master "/etc/keepalived/notify.sh master"
-    notify_backup "/etc/keepalived/notify.sh backup"
-    notify_fault "/etc/keepalived/notify.sh fault"
-}
-vrrp_instance VI_2 {
-    state MASTER
-    interface ens33
-    virtual_router_id 52
-    priority 100  #备用机器的keepalived的权重要小于这个权重，并且当nginx服务挂掉后100-2要小于备用机器的权重。
-    advert_int 1
-    authentication {
-        auth_type PASS
-        auth_pass 1111
-    }
-    virtual_ipaddress {
-       192.168.0.101/16 dev ens33 label ens33:2
-    }
-    track_script {    #定义使用哪个脚本来检查。
-        chk_nginx
-    }
-    notify_master "/etc/keepalived/notify.sh master"
+    } 
+    notify_master "/etc/keepalived/notify.sh master"	    #通知脚本
     notify_backup "/etc/keepalived/notify.sh backup"
     notify_fault "/etc/keepalived/notify.sh fault"
 }
@@ -407,3 +370,4 @@ mv /usr/local/nginx/sbin/nginx{.bak,};systemctl start nginx
 <h1>The page from web1</h1>
 <h1>The page from web2</h1>
 ```
+
