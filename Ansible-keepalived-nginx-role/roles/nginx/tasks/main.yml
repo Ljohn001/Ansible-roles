@@ -28,24 +28,37 @@
   shell: > 
     cd {{ srcpath }}/{{ nginxtar | replace('.tar.gz','')}} && \
     ./configure --prefix={{ nginxpath }} \
-    --user={{ nginxuser }} --group={{ nginxgroup }} \
+    --user={{ nginxuser }} \
+    --group={{ nginxgroup }} \
+    --sbin-path={{ nginxpath }}/sbin/nginx \
+    --conf-path={ ngxconf }/nginx.conf \
+    --error-log-path=/var/log/nginx/error.log \
+    --http-log-path=/var/log/nginx/access.log \
+    --pid-path=/var/run/nginx/nginx.pid  \
+    --lock-path=/var/lock/nginx.lock \
     --with-http_ssl_module \
-    --with-http_realip_module \
-    --with-http_image_filter_module \
-    --with-http_mp4_module \
     --with-http_flv_module \
+    --with-http_stub_status_module \
     --with-http_gzip_static_module \
-    --with-stream \
-    --with-stream_ssl_module \
-    --with-pcre \
-    --with-http_stub_status_module && \
+    --http-client-body-temp-path=/var/tmp/nginx/client/ \
+    --http-proxy-temp-path=/var/tmp/nginx/proxy/ \
+    --http-fastcgi-temp-path=/var/tmp/nginx/fcgi/ \
+    --http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+    --http-scgi-temp-path=/var/tmp/nginx/scgi \
+    --with-pcre && \
     make -j `lscpu | awk '$1~/^CPU\(s\):/{print $2}'` && \
     make install
   args:
     creates: "{{ nginxpath }}"
 
 - name: copy nginx conf
-  template: src=nginx.conf.j2 dest={{ nginxpath }}/conf/nginx.conf
+  template: src=nginx.conf.j2 dest={{ ngxconf }}/nginx.conf
+
+- name: create client path and input env
+  shell: >
+    mkdir -pv /var/tmp/nginx/client \
+    echo "export PATH={{ nginxpath }}/sbin:$PATH" >/etc/profile.d/nginx.sh \
+    source /etc/profile
 
 - name: copy nginx systemd script
   template: src=nginx.systemd dest=/lib/systemd/system/nginx.service

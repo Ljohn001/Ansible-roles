@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-vip=192.168.0.100
+vip={{ vip }}
 contact='root@localhost'
 
 notify() {

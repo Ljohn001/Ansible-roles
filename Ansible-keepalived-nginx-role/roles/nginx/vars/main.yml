@@ -1,8 +1,9 @@
 ---
-srcpath: "/usr/local/src"
+srcpath: "/opt"
 ngxversion: "1.10.3"
 nginxtar: "nginx-{{ ngxversion }}.tar.gz"
 nginxpath: "/usr/local/nginx"
+ngxconf: "/etc/nginx"
 nginxuser: "nginx"
 nginxgroup: "nginx"
 

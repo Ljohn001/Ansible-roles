@@ -12,7 +12,7 @@
   template: src=keepalived.conf dest=/etc/keepalived/keepalived.conf
 
 - name: copy ch_scripts for keepalived
-  template: src={{ item }} dest=/etc/keepalived/{{ item }}
+  template: src={{ item }} dest=/etc/keepalived/{{ item }} mode=0755
   with_items:
     - notify.sh
     - chk_nginx.sh

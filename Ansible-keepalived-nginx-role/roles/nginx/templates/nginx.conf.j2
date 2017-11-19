@@ -32,8 +32,8 @@ http {
 
     #gzip  on;
     upstream backserver {
-        server 192.168.0.58:80 weight=1 max_fails=3 fail_timeout=3s;
-        server 192.168.0.59:80 weight=2 max_fails=3 fail_timeout=3s;
+        server {{ web1 }}:80 weight=1 max_fails=3 fail_timeout=3s;
+        server {{ web2 }}:80 weight=2 max_fails=3 fail_timeout=3s;
     }
     server {
         listen       80;
