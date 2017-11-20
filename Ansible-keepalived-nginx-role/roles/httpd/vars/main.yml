@@ -1,4 +1,4 @@
 ---
 http_port: 80
-vip: {{ VIP }}
+vip: "{{ VIP }}"
 iface: "{{ ansible_default_ipv4['interface'] }}"
