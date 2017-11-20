@@ -10,3 +10,8 @@
   - name: show base info
     shell: cat /proc/sys/net/ipv4/conf/{{ d }}/arp_announce && \
       echo "{{ a }}" && echo "{{ b }}" && echo "{{ c }}"
+
+  - name: copy nginx init script
+    template: src=nginx.init dest=/etc/init.d/nginx mode=755
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+     

@@ -31,7 +31,7 @@
     --user={{ nginxuser }} \
     --group={{ nginxgroup }} \
     --sbin-path={{ nginxpath }}/sbin/nginx \
-    --conf-path={ ngxconf }/nginx.conf \
+    --conf-path={{ ngxconf }}/nginx.conf \
     --error-log-path=/var/log/nginx/error.log \
     --http-log-path=/var/log/nginx/access.log \
     --pid-path=/var/run/nginx/nginx.pid  \
@@ -56,16 +56,11 @@
 
 - name: create client path and input env
   shell: >
-    mkdir -pv /var/tmp/nginx/client \
-    echo "export PATH={{ nginxpath }}/sbin:$PATH" >/etc/profile.d/nginx.sh \
+    mkdir -pv /var/tmp/nginx/client && \
+    echo "export PATH={{ nginxpath }}/sbin:$PATH" >/etc/profile.d/nginx.sh && \
     source /etc/profile
 
-- name: copy nginx systemd script
-  template: src=nginx.systemd dest=/lib/systemd/system/nginx.service
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
-  notify: start nginx service
-
 - name: copy nginx init script
-  template: src=nginx.init dest=/etc/init.d/nginx mode=755
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+  template: src=nginx.init dest=/etc/init.d/nginx mode=0755
+#  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
   notify: start nginx service

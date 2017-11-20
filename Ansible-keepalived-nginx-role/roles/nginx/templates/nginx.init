@@ -16,7 +16,7 @@
 [ "$NETWORKING" = "no" ] && exit 0
  nginx="{{ nginxpath }}/sbin/nginx"
  prog=$(basename $nginx)
- NGINX_CONF_FILE="{{ ngxconf }}/nginx.conf "
+ NGINX_CONF_FILE="{{ ngxconf }}/nginx.conf"
  lockfile=/var/lock/nginx.lock
  start() {
     [ -x $nginx ] || exit 5
