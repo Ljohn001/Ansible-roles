@@ -8,8 +8,8 @@
  
 ### 二、环境及配置
 #### 1.环境
-系统使用CentSO6.9 or CentOS7.3
 
+系统使用当前最新的CentSO6.9 or CentOS7.4构建测试并验证
 服务器 | IP地址| 软件版本
 ---|---|----
 nginx proxy1  | 192.168.0.56| 1.10.3
@@ -18,6 +18,46 @@ keepalived1   | 192.168.0.56| 1.3.5
 keepalived2   | 192.168.0.57| 1.3.5
 web1 httpd  | 192.168.0.58| 2.4.6 or 2.2.15
 web2 httpd  | 192.168.0.59| 2.4.6 or 2.2.15
+
+1. 使用ansible前最好使用基于公钥认证
+```
+##在任意一台机器
+# ssh-keygen -t rsa  #有确认提示，一直按回车即可
+# cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
+# chmod 600 ~/.ssh/authorized_keys
+# for i in 56 57 58 59;do rsync -a ~/.ssh/authorized_keys root@192.168.0.$i:/root/ .ssh ;done
+```
+2. 修改项目中hosts配置文件
+（这里根据自己当前主机IP填写）
+```
+[all:vars]
+ansible_ssh_port=22
+ansible_ssh_user=root
+ansible_become=1
+ansible_become_user=root
+ansible_become_method=sudo
+VIP=192.168.0.100    #全局VIP设定
+web1=192.168.0.58    #后端web
+web2=192.168.0.59
+NTPServer=192.168.0.56   #NTPServer 配置，可以任意配置
+[nginx]
+192.168.0.56
+192.168.0.57
+[keepalived]
+192.168.0.56 STATE=MASTER  PRI=100
+192.168.0.57 STATE=BACKUP  PRI=99
+[web]
+192.168.0.58 WEB=web1
+192.168.0.59 WEB=web2
+```
+3. 修改initial role中的hosts.j2配置文件
+
+```
+192.168.0.56 node1
+192.168.0.57 node2
+192.168.0.58 node3
+192.168.0.59 node4
+```
 
 #### 2. 配置：
 keepalived1:
@@ -179,7 +219,7 @@ stop)
 esac
 ```
 
-### 三、ansible deploy
+### 三、ansible 一键部署
 ### 1. ansible目录结构：
 ```
 ├── ansible.cfg
@@ -197,6 +237,11 @@ esac
 │   │   │   └── setka.sh
 │   │   └── vars
 │   │       └── main.yml
+│   ├── initial
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       └── hosts.j2
 │   ├── keepalived
 │   │   ├── handlers
 │   │   │   └── main.yml
@@ -221,7 +266,7 @@ esac
 │           └── main.yml
 └── site.yml
 
-16 directories, 22 files
+19 directories, 24 files
 ```
 #### 2.执行playbook
 ```
@@ -370,6 +415,5 @@ mv /usr/local/nginx/sbin/nginx{.bak,};systemctl start nginx
 <h1>The page from web1</h1>
 <h1>The page from web2</h1>
 ```
-
 关于高可用
 本人的博客地址：http://ljohn.blog.51cto.com/11932290/1981369

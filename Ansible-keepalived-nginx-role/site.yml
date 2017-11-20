@@ -1,10 +1,13 @@
 ---
+- hosts: all
+  roles:
+    - initial
 - hosts: nginx
   roles:
     - nginx 
-#- hosts: keepalived
-#  roles:
-#    - keepalived
-#- hosts: web
-#  roles:
-#    - httpd
+- hosts: keepalived
+  roles:
+    - keepalived
+- hosts: web
+  roles:
+    - httpd

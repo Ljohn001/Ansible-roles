@@ -4,9 +4,10 @@ ansible_ssh_user=root
 ansible_become=1
 ansible_become_user=root
 ansible_become_method=sudo
-VIP=192.168.0.100
-web1=192.168.0.58
+VIP=192.168.0.100    #全局VIP设定
+web1=192.168.0.58    #后端web
 web2=192.168.0.59
+NTPServer=192.168.0.56   #NTPServer 配置，可以任意配置
 [nginx]
 192.168.0.56
 192.168.0.57

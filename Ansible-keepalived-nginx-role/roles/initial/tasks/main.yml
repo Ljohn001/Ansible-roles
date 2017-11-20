@@ -1,0 +1,10 @@
+---
+- name: install ntpdate packages         //安装ntpdate包
+  yum: name=ntpdate state=present
+
+- name: cron sync time from NTP Server   //设置计划任务
+  cron: name="sync time from NTP Server" minute="*/5" job="/usr/sbin/ntpdate {{ NTPServer }} &> /dev/null"
+
+- name: copy /initial/template/hosts to node1 node2 node3 node4   //hosts 域名解析模板
+  template: src=hosts.j2 dest=/etc/hosts
+
