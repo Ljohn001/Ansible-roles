@@ -57,3 +57,5 @@ ntp|2017.10
 QQ：184694637
 
 Mail: ljohnmail@foxmail.com
+
+Blog：http://blog.51cto.com/ljohn
